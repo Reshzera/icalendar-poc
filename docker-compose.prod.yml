@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   app:
-    image: reshzera/barber-api:latest
+    image: reshzera/icalendar:latest
     container_name: nest_app_icalendar
     restart: always
     depends_on:
