@@ -3,15 +3,15 @@ version: '3.8'
 services:
   app:
     image: reshzera/barber-api:latest
-    container_name: nest_app
+    container_name: nest_app_icalendar
     restart: always
     depends_on:
       - db
     ports:
-      - '4000:4000'
+      - '3000:4000'
     environment:
       # Database settings
-      DATABASE_URL: "postgresql://admin:admin@db:5432/barber-api?schema=public"
+      DATABASE_URL: "postgresql://admin:admin@db:5432/icalendar-api?schema=public"
       # JWT settings
       JWT_SECRET_KEY: "dfcbc880c50b167f18d7d0c31a611cc8852ca403bd3d72f42e298c657dcc295c82c5d6c5183e2eb0fc19f4a39da86889f849a7714b80b8a4bbd4513d362956f599a1a4dd8387603dd9bb1c5e48e610ef"
       JWT_EXPIRATION_TIME: "5d"
@@ -20,12 +20,12 @@ services:
 
   db:
     image: postgres:latest
-    container_name: postgres_db
+    container_name: postgres_db_icalendar
     restart: always
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
-      - '5432:5432'
+      - '5431:5432'
     environment:
       POSTGRES_USER: "admin"
       POSTGRES_PASSWORD: "admin"
