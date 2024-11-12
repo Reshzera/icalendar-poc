@@ -1,16 +1,26 @@
-# Usar a imagem oficial do PostgreSQL
-FROM postgres:latest
+# Utilize uma imagem base oficial do Node.js
+FROM node:20-alpine
 
-# Definir variáveis de ambiente padrão para o PostgreSQL
-ENV POSTGRES_DB=icalendar-api
-ENV POSTGRES_USER=admin
-ENV POSTGRES_PASSWORD=admin
+# Defina o diretório de trabalho
+WORKDIR /app
 
-# Expõe a porta padrão do PostgreSQL
-EXPOSE 5432
+# Copie os arquivos de dependências
+COPY package*.json ./
 
-# Define o volume para persistência de dados
-VOLUME [ "/var/lib/postgresql/data" ]
+# Instale as dependências
+RUN yarn install
 
-# O comando padrão inicializa um servidor PostgreSQL
-CMD ["postgres"]
+# Copie o restante do código da aplicação
+COPY . .
+
+# Gere o cliente Prisma
+RUN npx prisma generate
+
+# Compile a aplicação NestJS
+RUN yarn build
+
+# Exponha a porta que a aplicação utiliza
+EXPOSE 4000
+
+# Inicie a aplicação
+CMD ["yarn", "start:prod"]
