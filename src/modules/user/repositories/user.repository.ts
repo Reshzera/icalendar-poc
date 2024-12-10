@@ -5,6 +5,11 @@ import { User } from '../entities/user.entity';
 @Injectable()
 export class UserRepository {
   constructor(private prisma: PrismaService) {}
+
+  async findAll() {
+    const users = await this.prisma.user.findMany();
+    return users.map(User.PrismaToEntity);
+  }
   async create(user: User) {
     const createdUser = await this.prisma.user.create({
       data: {

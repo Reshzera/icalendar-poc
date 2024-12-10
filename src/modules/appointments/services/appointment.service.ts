@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { AppointmentNotFoundError } from '../../../errors/appointment.error';
+import {
+  AppointmentNotFoundError,
+  AppointmentUserNotAvailable,
+  AppointmentUsersNotFound,
+} from '../../../errors/appointment.error';
 import { CreateAppointmentDto } from '../dtos/appointment.create.dto';
 import { UpdateAppointmentDto } from '../dtos/appointment.update.dto';
 import { Appointment } from '../entities/appointment.entity';
@@ -29,7 +33,11 @@ export class AppointmentService {
   }
 
   async create(appointmentDto: CreateAppointmentDto) {
-    const users = appointmentDto.users.map((user) => new User({ id: user }));
+    const users = await this.getAllValidUsers(
+      appointmentDto.users,
+      appointmentDto.start,
+      appointmentDto.end,
+    );
 
     const appointment = new Appointment({ ...appointmentDto, users });
 
@@ -45,7 +53,11 @@ export class AppointmentService {
       throw new AppointmentNotFoundError();
     }
 
-    const users = appointmentDto.users.map((user) => new User({ id: user }));
+    const users = await this.getAllValidUsers(
+      appointmentDto.users,
+      appointmentDto.start,
+      appointmentDto.end,
+    );
 
     appointment.update({ ...appointmentDto, users });
 
@@ -65,5 +77,29 @@ export class AppointmentService {
     await this.appointmentRepository.delete(id);
 
     return Appointment.EntityToApi(appointment);
+  }
+
+  private async getAllValidUsers(users: string[], start: Date, end: Date) {
+    const allUsersExist = await this.appointmentRepository.getManyUsers(users);
+    const usersUnavailable: User[] = [];
+
+    if (allUsersExist.length !== users.length) {
+      throw new AppointmentUsersNotFound();
+    }
+
+    for (const user of allUsersExist) {
+      const isUserAvailable =
+        await this.appointmentRepository.checkAvailability(user.id, start, end);
+
+      if (!isUserAvailable) {
+        usersUnavailable.push(user);
+      }
+    }
+
+    if (usersUnavailable.length > 0) {
+      throw new AppointmentUserNotAvailable(usersUnavailable);
+    }
+
+    return allUsersExist;
   }
 }

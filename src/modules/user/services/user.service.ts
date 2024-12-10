@@ -9,6 +9,14 @@ import { UpdateUserDto } from '../dtos/user.update.dto';
 export class UserService {
   constructor(private userRepository: UserRepository) {}
 
+  async findAll() {
+    const users = await this.userRepository.findAll();
+
+    return {
+      users: users.map(User.EntityToApi),
+    };
+  }
+
   async create(user: CreateUserDto) {
     const userExists = await this.userRepository.findByEmail(user.email);
 

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../infra/Prisma/prisma.service';
 import { Appointment } from '../entities/appointment.entity';
+import { User } from '../../user/entities/user.entity';
 
 @Injectable()
 export class AppointmentRepository {
@@ -85,15 +86,7 @@ export class AppointmentRepository {
     return Appointment.PrismaToEntity(deletedAppointment);
   }
 
-  async checkAvailability(userId: string, start: Date, end?: Date) {
-    const conditions = end
-      ? {
-          AND: [{ start: { lte: end } }, { end: { gte: start } }],
-        }
-      : {
-          OR: [{ start: { gte: start } }, { end: { gte: start } }],
-        };
-
+  async checkAvailability(userId: string, start: Date, end: Date) {
     const appointments = await this.prisma.appointment.findMany({
       where: {
         users: {
@@ -101,10 +94,21 @@ export class AppointmentRepository {
             id: userId,
           },
         },
-        ...conditions,
+        AND: [{ start: { lte: end } }, { end: { gte: start } }],
       },
     });
 
     return appointments.length === 0;
+  }
+
+  async getManyUsers(users: string[]) {
+    const usersExist = await this.prisma.user.findMany({
+      where: {
+        id: {
+          in: users,
+        },
+      },
+    });
+    return usersExist.map((user) => User.PrismaToEntity(user));
   }
 }
