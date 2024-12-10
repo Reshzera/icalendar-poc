@@ -113,8 +113,12 @@ export class AppointmentService {
     if (usersUnavailable.length > 0) {
       const result = usersUnavailable.map((user) => {
         const suggestedTime = user.appointments.reduce(
-          (acc, appointment) => (appointment.end > acc ? appointment.end : acc),
-          start,
+          (acc: Date, appointment) => {
+            if (!acc) return appointment.end;
+
+            return appointment.end > acc ? appointment.end : acc;
+          },
+          undefined,
         );
         const convertedUser = User.EntityToApi(user.user);
 
