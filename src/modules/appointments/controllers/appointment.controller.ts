@@ -11,6 +11,7 @@ import { AppointmentService } from '../services/appointment.service';
 import { CreateAppointmentDto } from '../dtos/appointment.create.dto';
 import { CurrentUser } from '../../auth/decorators/current-user.decorator';
 import { UpdateAppointmentDto } from '../dtos/appointment.update.dto';
+import { User } from '../../user/entities/user.entity';
 
 @Controller({
   path: 'appointment',
@@ -29,16 +30,20 @@ export class AppointmentController {
   }
 
   @Post()
-  async createAppointment(@Body() appointment: CreateAppointmentDto) {
-    return await this.appointmentService.create(appointment);
+  async createAppointment(
+    @Body() appointment: CreateAppointmentDto,
+    @CurrentUser() user: User,
+  ) {
+    return await this.appointmentService.create(appointment, user);
   }
 
   @Patch(':id')
   async updateAppointment(
     @Param('id') id: string,
     @Body() appointment: UpdateAppointmentDto,
+    @CurrentUser() user: User,
   ) {
-    return await this.appointmentService.update(id, appointment);
+    return await this.appointmentService.update(id, appointment, user);
   }
 
   @Delete(':id')

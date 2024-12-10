@@ -32,9 +32,11 @@ export class AppointmentService {
     return Appointment.EntityToApi(appointment);
   }
 
-  async create(appointmentDto: CreateAppointmentDto) {
+  async create(appointmentDto: CreateAppointmentDto, user: User) {
+    const usersToValidate = [...appointmentDto.users, user.id];
+
     const users = await this.getAllValidUsers(
-      appointmentDto.users,
+      usersToValidate,
       appointmentDto.start,
       appointmentDto.end,
     );
@@ -46,17 +48,21 @@ export class AppointmentService {
     return Appointment.EntityToApi(newAppointment);
   }
 
-  async update(id: string, appointmentDto: UpdateAppointmentDto) {
+  async update(id: string, appointmentDto: UpdateAppointmentDto, user: User) {
     const appointment = await this.appointmentRepository.findById(id);
 
     if (!appointment) {
       throw new AppointmentNotFoundError();
     }
 
+    const usersToValidate = appointmentDto.users
+      ? [...appointmentDto.users, user.id]
+      : [...appointment.users.map((user) => user.id), user.id];
+
     const users = await this.getAllValidUsers(
-      appointmentDto.users,
-      appointmentDto.start,
-      appointmentDto.end,
+      usersToValidate,
+      appointmentDto.start ?? appointment.start,
+      appointmentDto.end ?? appointment.end,
     );
 
     appointment.update({ ...appointmentDto, users });
