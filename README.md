@@ -1,73 +1,58 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# iCalendar POC - Backend (NestJS, Postgres, Prisma & Docker)
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This repository presents the backend component of the iCalendar Proof of Concept (POC). It is built using **NestJS**, **Postgres**, **Prisma**, and is fully containerized with **Docker** for both the database and application runtime. Additionally, GitHub Actions have been integrated to streamline the deployment process to a DigitalOcean VPS.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Key Features
 
-## Description
+- **User Authentication & Management:**  
+  Implements secure user registration, login, and session handling.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- **Appointment Scheduling API:**  
+  Offers endpoints for creating, viewing, editing, and deleting user appointments.
 
-## Installation
+- **Integration with React Frontend:**  
+  Designed to work seamlessly with the React-based frontend POC, providing a reliable and efficient data layer.
 
-```bash
-$ yarn install
-```
+- **Database Management with Prisma & Postgres:**  
+  Utilizes Prisma as the ORM layer, ensuring a type-safe interface to a Postgres database. Migrations and schema changes are handled effortlessly.
 
-## Running the app
+- **Dockerized Deployment:**  
+  Both the backend application and the Postgres database run in Docker containers, simplifying setup and deployment across different environments.
 
-```bash
-# development
-$ yarn run start
+- **GitHub Actions & DigitalOcean VPS Deployment:**  
+  Continuous integration and deployment workflows automatically build and deploy the backend application to a DigitalOcean VPS, ensuring a smooth and reliable production environment.
 
-# watch mode
-$ yarn run start:dev
+## Technologies Used
 
-# production mode
-$ yarn run start:prod
-```
+- **NestJS (vX)**: A progressive Node.js framework for building efficient and scalable server-side applications.
+- **Postgres**: A powerful, open-source relational database system.
+- **Prisma**: A modern ORM that provides type-safe database access, migrations, and an intuitive schema management.
+- **Docker & Docker Compose**: For containerizing the backend and database, making the setup and scaling of services more manageable.
+- **GitHub Actions**: For continuous integration and continuous deployment (CI/CD) to a DigitalOcean VPS.
 
-## Test
+## Deployment & CI/CD
 
-```bash
-# unit tests
-$ yarn run test
+- **GitHub Actions:**  
+  The repository includes a GitHub Actions workflow that automatically builds and deploys the Docker image to the DigitalOcean VPS environment whenever changes are pushed to the main branch.
 
-# e2e tests
-$ yarn run test:e2e
+- **DigitalOcean VPS Setup:**  
+  You will need to configure your DigitalOcean VPS, ensuring that Docker and Docker Compose are installed. Update the GitHub Actions workflow with the correct credentials and server information to enable automatic deployments.
 
-# test coverage
-$ yarn run test:cov
-```
+## Next Steps & Improvements
 
-## Support
+- **Advanced Security & Logging:**  
+  Implement more robust error handling, logging, and security measures (e.g., rate-limiting, improved JWT strategies).
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+- **Scalability & Load Testing:**  
+  Explore horizontal scaling options using Docker swarm or Kubernetes and consider load testing in the future to ensure the backend can handle increased traffic.
 
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- **More Sophisticated Scheduling Logic:**  
+  Enhance the appointment scheduling logic (e.g., recurring appointments, reminders, and calendar integrations).
 
 ## License
 
-Nest is [MIT licensed](LICENSE).
+This project is licensed under the [MIT License](LICENSE). Feel free to fork, modify, and distribute as needed.
+
+---
+
+This backend POC demonstrates the foundational aspects of a scalable, secure, and easily deployable API service. It pairs seamlessly with the frontend counterpart and serves as a baseline for more advanced, production-ready applications.
