@@ -98,7 +98,7 @@ export class AppointmentRepository {
       },
     });
 
-    return appointments.length === 0;
+    return appointments.map(Appointment.PrismaToEntity);
   }
 
   async getManyUsers(users: string[]) {

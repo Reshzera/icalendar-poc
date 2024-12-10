@@ -10,6 +10,11 @@ import { Appointment } from '../entities/appointment.entity';
 import { AppointmentRepository } from '../repositories/appointment.repository';
 import { User } from '../../user/entities/user.entity';
 
+type UsersUnavailable = {
+  user: User;
+  appointments: Appointment[];
+};
+
 @Injectable()
 export class AppointmentService {
   constructor(private appointmentRepository: AppointmentRepository) {}
@@ -87,23 +92,39 @@ export class AppointmentService {
 
   private async getAllValidUsers(users: string[], start: Date, end: Date) {
     const allUsersExist = await this.appointmentRepository.getManyUsers(users);
-    const usersUnavailable: User[] = [];
+    const usersUnavailable: UsersUnavailable[] = [];
 
     if (allUsersExist.length !== users.length) {
       throw new AppointmentUsersNotFound();
     }
 
     for (const user of allUsersExist) {
-      const isUserAvailable =
+      const userAppointments =
         await this.appointmentRepository.checkAvailability(user.id, start, end);
 
-      if (!isUserAvailable) {
-        usersUnavailable.push(user);
+      if (!!userAppointments.length) {
+        usersUnavailable.push({
+          user,
+          appointments: userAppointments,
+        });
       }
     }
 
     if (usersUnavailable.length > 0) {
-      throw new AppointmentUserNotAvailable(usersUnavailable);
+      const result = usersUnavailable.map((user) => {
+        const suggestedTime = user.appointments.reduce(
+          (acc, appointment) => (appointment.end > acc ? appointment.end : acc),
+          start,
+        );
+        const convertedUser = User.EntityToApi(user.user);
+
+        return {
+          ...convertedUser,
+          suggestedTime,
+        };
+      });
+
+      throw new AppointmentUserNotAvailable(result);
     }
 
     return allUsersExist;

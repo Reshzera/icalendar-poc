@@ -1,5 +1,4 @@
 import { BadRequestException } from '@nestjs/common';
-import { User } from '../modules/user/entities/user.entity';
 
 export class AppointmentNotFoundError extends BadRequestException {
   constructor() {
@@ -19,9 +18,9 @@ export class AppointmentUsersNotFound extends BadRequestException {
 }
 
 export class AppointmentUserNotAvailable extends BadRequestException {
-  constructor(users: User[]) {
+  constructor(users: unknown) {
     super({
-      unavailableUsers: users.map((user) => User.EntityToApi(user)),
+      unavailableUsers: users,
     });
   }
 }
