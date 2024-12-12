@@ -86,7 +86,12 @@ export class AppointmentRepository {
     return Appointment.PrismaToEntity(deletedAppointment);
   }
 
-  async checkAvailability(userId: string, start: Date, end: Date) {
+  async checkAvailability(
+    userId: string,
+    start: Date,
+    end: Date,
+    appointmentId?: string,
+  ) {
     const appointments = await this.prisma.appointment.findMany({
       where: {
         users: {
@@ -95,6 +100,7 @@ export class AppointmentRepository {
           },
         },
         AND: [{ start: { lte: end } }, { end: { gte: start } }],
+        ...(appointmentId && { NOT: { id: appointmentId } }),
       },
     });
 

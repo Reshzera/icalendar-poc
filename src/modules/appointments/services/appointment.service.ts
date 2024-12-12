@@ -68,6 +68,7 @@ export class AppointmentService {
       usersToValidate,
       appointmentDto.start ?? appointment.start,
       appointmentDto.end ?? appointment.end,
+      appointment.id,
     );
 
     appointment.update({ ...appointmentDto, users });
@@ -90,7 +91,12 @@ export class AppointmentService {
     return Appointment.EntityToApi(appointment);
   }
 
-  private async getAllValidUsers(users: string[], start: Date, end: Date) {
+  private async getAllValidUsers(
+    users: string[],
+    start: Date,
+    end: Date,
+    appointmentId?: string,
+  ) {
     const allUsersExist = await this.appointmentRepository.getManyUsers(users);
     const usersUnavailable: UsersUnavailable[] = [];
 
@@ -100,7 +106,12 @@ export class AppointmentService {
 
     for (const user of allUsersExist) {
       const userAppointments =
-        await this.appointmentRepository.checkAvailability(user.id, start, end);
+        await this.appointmentRepository.checkAvailability(
+          user.id,
+          start,
+          end,
+          appointmentId,
+        );
 
       if (!!userAppointments.length) {
         usersUnavailable.push({
