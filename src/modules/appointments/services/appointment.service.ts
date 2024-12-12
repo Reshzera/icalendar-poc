@@ -53,7 +53,7 @@ export class AppointmentService {
     return Appointment.EntityToApi(newAppointment);
   }
 
-  async update(id: string, appointmentDto: UpdateAppointmentDto, user: User) {
+  async update(id: string, appointmentDto: UpdateAppointmentDto) {
     const appointment = await this.appointmentRepository.findById(id);
 
     if (!appointment) {
@@ -61,8 +61,8 @@ export class AppointmentService {
     }
 
     const usersToValidate = appointmentDto.users
-      ? [...appointmentDto.users, user.id]
-      : [...appointment.users.map((user) => user.id), user.id];
+      ? appointmentDto.users
+      : appointment.users.map((user) => user.id);
 
     const users = await this.getAllValidUsers(
       usersToValidate,

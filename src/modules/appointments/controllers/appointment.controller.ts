@@ -41,9 +41,8 @@ export class AppointmentController {
   async updateAppointment(
     @Param('id') id: string,
     @Body() appointment: UpdateAppointmentDto,
-    @CurrentUser() user: User,
   ) {
-    return await this.appointmentService.update(id, appointment, user);
+    return await this.appointmentService.update(id, appointment);
   }
 
   @Delete(':id')
